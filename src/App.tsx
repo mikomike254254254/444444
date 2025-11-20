@@ -1,4 +1,7 @@
 import { useState } from 'react';
+import { AdminAuthProvider } from './contexts/AdminAuthContext';
+import ProtectedRoute from './components/ProtectedRoute';
+import AdminDashboard from './pages/AdminDashboard';
 import Header from './components/Header';
 import Hero from './components/Hero';
 import FeaturedCollections from './components/FeaturedCollections';
@@ -13,6 +16,7 @@ function App() {
   const [currentCategory, setCurrentCategory] = useState<string>('all');
   const [showHero, setShowHero] = useState(true);
   const [searchQuery, setSearchQuery] = useState<string>('');
+  const [showAdmin, setShowAdmin] = useState(false);
 
   const handleCategoryChange = (category: string) => {
     setCurrentCategory(category);
@@ -27,6 +31,20 @@ function App() {
       setShowHero(false);
     }
   };
+
+  if (window.location.pathname === '/admin') {
+    setShowAdmin(true);
+  }
+
+  if (showAdmin) {
+    return (
+      <AdminAuthProvider>
+        <ProtectedRoute>
+          <AdminDashboard />
+        </ProtectedRoute>
+      </AdminAuthProvider>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
